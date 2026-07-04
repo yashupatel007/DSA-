@@ -1,0 +1,56 @@
+problem link - https://leetcode.com/problems/house-robber-iv/description/
+Time Complexity- O(n) + O(nlogm) = O(n logm)
+Space Complexity - O(1)
+
+code-
+class Solution {
+public:
+    int robSkip(vector<int>& nums,int& mid)
+    {
+        int m=nums.size();
+        int index=0;
+        int count=0;
+        while(index<m)
+        {
+            if(nums[index]<=mid)// if value id less or equal to my min capability
+            {
+                count++;// rob and move +2
+                index+=2;
+            }
+            else
+            {
+                index++;// greater than my min cap so move +1
+            }
+        }
+        return count;
+    }
+    int minCapability(vector<int>& nums, int k) {
+        int n=nums.size();
+
+        // find min & max
+        int mini=INT_MAX;
+        int maxi=INT_MIN;
+        for(int i=0;i<n;i++)
+        {
+            mini=min(mini,nums[i]);
+            maxi=max(maxi,nums[i]);
+        }
+
+        // apply binary search and check that it is valid to rob min k in range[mini,maxi]
+        int low=mini;
+        int high=maxi;
+        int ans=0;
+        while(low<=high)
+        {
+            int mid=low+(high-low)/2;// mid is min capability
+            if(robSkip(nums,mid)>=k)
+            {
+                ans=mid;    // it can be my min ca]p
+                high=mid-1;// find smaller
+            }
+            else
+                low=mid+1;// find bigger value which fulfill my min cap
+        }
+        return ans;
+    }
+};
