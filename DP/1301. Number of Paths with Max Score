@@ -1,0 +1,141 @@
+link - https://leetcode.com/problems/number-of-paths-with-max-score/description/?envType=daily-question&envId=2026-07-05
+TC- O(n^2)
+SC- O(n^2)
+
+code-
+
+class Solution {
+public:
+    int n;
+    int MOD=1e9+7;
+
+    int getInt(char ch)
+    {
+        return ch=='S' ? 0 : ch-'0';
+    }
+
+    bool valid(int i,int j,vector<string>& board)
+    {
+        return i>=0 && i<n && j>=0 && j<n && board[i][j]!='X';
+    }
+
+    vector<int> find(int row,int col,vector<string>& board,vector<vector<pair<int,int>>>& dp)
+    {
+        if(board[row][col]=='E')
+            return {0,1};
+
+        if(board[row][col]=='X')
+            return {0,0};
+
+        if(dp[row][col].first!=-1)
+            return {dp[row][col].first,dp[row][col].second};
+        
+        vector<int>upScorePath(2); // [0]- score & [1]- path
+        vector<int>leftScorePath(2);
+        vector<int>diagScorePath(2);
+        char ch=board[row][col];
+
+        // check up
+        if(valid(row-1,col,board))
+        {
+            upScorePath= find(row-1,col,board,dp);
+            if(upScorePath[1]>0)
+            {
+                upScorePath[0]+=getInt(ch);
+            }
+        }
+        
+        //check left
+        if(valid(row,col-1,board))
+        {
+            leftScorePath= find(row,col-1,board,dp);
+            if(leftScorePath[1]>0)
+            {
+                leftScorePath[0]+=getInt(ch);
+            }
+        }
+
+        // check diagonal 
+        if(valid(row-1,col-1,board))
+        {
+            diagScorePath= find(row-1,col-1,board,dp);
+            if(diagScorePath[1]>0)
+            {
+                diagScorePath[0]+=getInt(ch);
+            }
+        }
+
+        // find the bestScore and bestPath by comparing
+        int bestScore;
+        int bestPath;
+
+        if(upScorePath[0]==leftScorePath[0] && leftScorePath[0]==diagScorePath[0])// all three equal
+        {
+            bestScore=upScorePath[0];
+            bestPath=upScorePath[1]+leftScorePath[1]+diagScorePath[1];
+        }
+
+        else if(upScorePath[0]==leftScorePath[0])// up and left are equal
+        {
+            bestScore=upScorePath[0];
+            bestPath=upScorePath[1]+leftScorePath[1];
+            // diagonal can be the largest among all
+            if(diagScorePath[0]>bestScore)
+            {
+                bestScore=diagScorePath[0];
+                bestPath=diagScorePath[1];
+            }
+        }
+
+         else if(leftScorePath[0]==diagScorePath[0])// left and diag are equal
+        {
+            bestScore=leftScorePath[0];
+            bestPath=leftScorePath[1]+diagScorePath[1];
+            // up can be the largest among all
+            if(upScorePath[0]>bestScore)
+            {
+                bestScore=upScorePath[0];
+                bestPath=upScorePath[1];
+            }
+        }
+
+         else if(upScorePath[0]==diagScorePath[0])// up and diag are equal
+        {
+            bestScore=upScorePath[0];
+            bestPath=upScorePath[1]+diagScorePath[1];
+            // left can be the largest among all
+            if(leftScorePath[0]>bestScore)
+            {
+                bestScore=leftScorePath[0];
+                bestPath=leftScorePath[1];
+            }
+        }
+        else    // all are different
+        {
+            bestScore=upScorePath[0];
+            bestPath=upScorePath[1];
+
+            if(leftScorePath[0]>bestScore)
+            {
+                bestScore=leftScorePath[0];
+                bestPath=leftScorePath[1];
+            }
+            if(diagScorePath[0]>bestScore)
+            {
+                bestScore=diagScorePath[0];
+                bestPath=diagScorePath[1];
+            }
+        }
+
+        dp[row][col].first=bestScore;
+        dp[row][col].second=bestPath%MOD;
+        return {dp[row][col].first,dp[row][col].second};
+
+    }
+    vector<int> pathsWithMaxScore(vector<string>& board) {
+        n=board.size();  
+        vector<vector<pair<int,int>>>dp(n,vector<pair<int,int>>(n,{-1,-1}));
+        vector<int>ans= find(n-1,n-1,board,dp);
+        return ans;
+    }
+};
