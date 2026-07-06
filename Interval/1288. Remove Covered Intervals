@@ -1,0 +1,33 @@
+link - https://leetcode.com/problems/remove-covered-intervals/description/?envType=daily-question&envId=2026-07-06
+TC- O(NlogN)
+SC- O(1)
+
+code- 
+
+class Solution {
+public:
+    static bool comp(vector<int>& a, vector<int>& b)
+    {
+        if(a[0]==b[0])
+            return a[1] > b[1]; // if start time is same greater end time comes first
+        
+        return a[0] < b[0]; // ascending order of start time
+    }
+    int removeCoveredIntervals(vector<vector<int>>& intervals) {
+        int n=intervals.size();
+        sort(intervals.begin(),intervals.end(),comp);
+
+        int maxEnd=intervals[0][1];
+        int count=0;
+        for(int i=1;i<n;i++)
+        {
+            if(maxEnd>=intervals[i][1]) // big ke ander small
+                count++;
+            else
+            {
+                maxEnd=intervals[i][1];// got new big end time
+            }
+        }
+        return n-count;
+    }
+};
