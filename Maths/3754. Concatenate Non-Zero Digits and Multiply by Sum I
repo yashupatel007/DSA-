@@ -1,0 +1,26 @@
+link - https://leetcode.com/problems/concatenate-non-zero-digits-and-multiply-by-sum-i/description/
+TC- O( log10 N)
+SC- O(1)
+code-
+
+class Solution {
+public:
+    long long sumAndMultiply(int n) {
+        long long num=0;
+        long long sum=0;
+        long long multiple=1;
+
+        while(n>0)
+        {
+            int digit=n%10;
+            if(digit!=0)
+            {
+                sum+=digit;
+                num=num+digit*multiple;// for making the number as it is 
+                multiple*=10;
+            }
+            n/=10;
+        }
+        return num*sum;
+    }
+};
