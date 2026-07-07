@@ -1,0 +1,53 @@
+link - https://leetcode.com/problems/next-greater-element-iii/description/
+TC- O(log10 N)
+SC- O(log10 N)
+code-
+
+class Solution {
+public:
+    int nextGreaterElement(int n) {
+        int temp=n;
+        vector<int>num;
+        while(temp!=0)
+        {
+            num.push_back(temp%10);
+            temp/=10;
+        }
+
+         if(num.size()==1)   return -1;// single digit
+
+        reverse(num.begin(),num.end());
+
+        int pivotIndex=-1;
+        for(int i=num.size()-2;i>=0;i--)
+        {
+            // find pivot from right to left(element < rightside)
+            if(num[i]<num[i+1])
+            {
+                pivotIndex=i;
+                break;
+            }
+        }
+        if(pivotIndex==-1)  return -1; // sorted in decresing order
+
+        for(int i=num.size()-1;i>=0;i--)
+        {
+            // find 1 element greater than pivot element and swap them
+            if(num[i]>num[pivotIndex])
+            {
+                swap(num[i],num[pivotIndex]);
+                break;
+            }
+        }
+        // now reverse the elements from the pivot onwards
+        reverse(num.begin()+pivotIndex+1,num.end());
+
+        // now copy into the number
+        long long ans=0;
+        for(int i=0;i<num.size();i++)
+        {
+            ans=(ans*10)+num[i];
+        }
+        return (ans>INT_MAX || ans<INT_MIN) ? -1 : ans;
+    }
+};
