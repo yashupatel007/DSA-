@@ -1,0 +1,77 @@
+link - https://leetcode.com/problems/concatenate-non-zero-digits-and-multiply-by-sum-ii/description/?envType=daily-question&envId=2026-07-08
+TC- O(N+M)= O(N)
+SC- O(N+M)= O(N)
+code- 
+
+class Solution {
+public:
+    int MOD=1e9+7;
+    vector<int> sumAndMultiply(string s, vector<vector<int>>& queries) {
+        int n=s.length();
+        int m=queries.size();
+        
+        //calculate the prefix_sum vector and prefix_val vector
+        //prefix_sum vector
+        vector<int>prefix_sum(n+1,0);   // to get the prefix sum we use index- prefix_sum[r-l] = sum 
+        prefix_sum[0]=0;
+        int prefsum=0;
+        for(int i=1;i<n+1;i++)
+        {
+            prefsum+=s[i-1]-'0';
+            prefix_sum[i]=prefsum;
+        }
+        
+        //prefix_val 
+        vector<long long>prefix_val(n+1,0); // prefix_val[r] - prefix_val[l]*10 = x
+        vector<int>count_nonZero(n+1,0);
+
+        prefix_val[0]=0;
+        long long value=0;
+        int nonZeroCount=0;
+        for(int i=1;i<n+1;i++)
+        {
+            if(s[i-1]=='0')
+            {
+                prefix_val[i]=value;
+                count_nonZero[i]=nonZeroCount;
+            }
+            else
+            {
+            int digit=s[i-1]-'0';
+            value=( value*10+digit ) % MOD;
+            prefix_val[i]=value;
+
+            nonZeroCount++;
+            count_nonZero[i]=nonZeroCount;
+            }
+        }
+        // calculate the power 10
+        vector<long long>power10(n+1,1);
+        for(int i=1;i<=n;i++)
+        {
+            power10[i]=(power10[i-1]*10)%MOD;
+        }
+
+        // traverse queries and store result in ans vector
+        vector<int>ans(m,0);
+        for(int i=0;i<m;i++)
+        {
+            int start=queries[i][0];
+            int end=queries[i][1];
+
+            // how many non zero count in this window
+            int nonZeroWindow=count_nonZero[end+1]-count_nonZero[start];
+            long long multiple=power10[nonZeroWindow];
+
+            //123-12*10 = 123-120= 3
+            long long fullNum=prefix_val[end+1];
+            long long toRemoveNum=(prefix_val[start]*multiple)%MOD;
+
+            long long x = ( fullNum - toRemoveNum + MOD ) % MOD;// +MOD to prevent -ve integer
+            long long sum=prefix_sum[end+1]-prefix_sum[start];
+
+            ans[i]=( x * (sum) % MOD) % MOD;
+        }
+        return ans;
+    }
+};
