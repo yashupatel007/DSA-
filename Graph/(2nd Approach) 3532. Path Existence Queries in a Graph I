@@ -1,0 +1,38 @@
+link - https://leetcode.com/problems/path-existence-queries-in-a-graph-i/description/?envType=daily-question&envId=2026-07-09
+TC- O(N)
+SC- O(N)
+code-
+
+class Solution {
+public:
+    vector<bool> pathExistenceQueries(int n, vector<int>& nums, int maxDiff, vector<vector<int>>& queries) {
+        vector<bool>ans(queries.size(),false);
+        vector<int>trackID(n,0);
+        int curr_ID=0;
+        
+        // give id to the sane connected node
+        for(int i=1;i<nums.size();i++)
+        {
+            if(nums[i]-nums[i-1]>maxDiff)   // >maxDiff so assign different ID
+            {
+                curr_ID++;    
+            }
+
+            trackID[i]=curr_ID;
+        }
+
+        // answer the queries
+        for(int i=0;i<queries.size();i++)
+        {
+            int start=queries[i][0];
+            int end=queries[i][1];
+
+            if(trackID[start]==trackID[end])
+            {
+                ans[i]=true;
+            }
+            // else already is false
+        }
+        return ans;
+    }
+};
