@@ -1,0 +1,73 @@
+link - https://leetcode.com/problems/count-the-number-of-complete-components/description/?envType=daily-question&envId=2026-07-11
+TC- O( V+E)
+SC- O(V)
+
+code-
+
+class Solution {
+public:
+    void DFS(int node,int parent,vector<vector<int>>& adj,int& v,int& e,vector<bool>& visited)
+    {
+        if(parent==-1)
+        {
+            visited[node]=1;
+        }
+        else
+        {
+            visited[node]=1;
+            v++;
+            e++;
+        }
+
+        // traverse its child
+        for(int j=0;j<adj[node].size();j++)
+        {
+            if(!visited[adj[node][j]])
+            {
+                DFS(adj[node][j],node,adj,v,e,visited);
+            }
+            else    //visited but not my parent
+            {
+                if(adj[node][j]!=parent && node>adj[node][j])
+                    e++;
+            }
+        }
+
+    }
+    bool validGraph(int& v,int& e)
+    {
+        int temp= (v*(v-1))/2;
+        return e==temp;
+    }
+
+    int countCompleteComponents(int n, vector<vector<int>>& edges) {
+        
+        vector<vector<int>>adj(n);
+        // build adj list
+        for(int i=0;i<edges.size();i++)
+        {
+            int u=edges[i][0];
+            int v=edges[i][1];
+            adj[u].push_back(v);
+            adj[v].push_back(u);
+        }
+        vector<bool>visited(n,0);
+        int count=0;
+        // DFS and count the vertex and edges in 1 component 
+
+        for(int i=0;i<n;i++)
+        {
+            if(!visited[i])
+            {
+                int v=1;
+                int e=0;
+                DFS(i,-1,adj,v,e,visited);
+
+               if(validGraph(v,e))
+                count++;
+
+            }
+        }
+        return count;
+    }
+};
