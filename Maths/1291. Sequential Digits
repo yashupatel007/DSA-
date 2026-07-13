@@ -1,0 +1,53 @@
+link - https://leetcode.com/problems/sequential-digits/description/?envType=daily-question&envId=2026-07-13
+TC- O(1)
+SC- O(1)
+code- 
+
+//approach 1- sliding window
+class Solution {
+public:
+    vector<int> sequentialDigits(int low, int high) {
+        string num="123456789";
+        int len=0;
+        int n=low;
+        while(n>0)
+        {
+            len++;
+            n/=10;
+        }
+
+        vector<int>ans;
+        for(int i=len;i<=9;i++)
+        {
+            for(int start=0;start<=9-i;start++)
+            {
+                int digit=stoi(num.substr(start,i));
+                if(digit>=low && digit<=high)
+                    ans.push_back(digit);
+                
+                if(digit>high)
+                    return ans;
+            }
+        }
+        return ans;
+    }
+};
+
+
+
+//aproach 2 - hardcore all combination
+
+class Solution {
+public:
+    vector<int> sequentialDigits(int low, int high) {
+        vector<int>comb={12,23,34,45,56,67,78,89,123,234,345,456,567,678,789,1234,2345,3456,4567,5678,6789,12345,23456,34567,45678,56789,123456, 234567, 345678, 456789, 1234567, 2345678, 3456789, 12345678, 23456789, 123456789};
+
+        vector<int>ans;
+        for(int x:comb)
+        {
+            if(x>=low && x<=high)
+                ans.push_back(x);
+        }
+        return ans;
+    }
+};
