@@ -1,0 +1,48 @@
+class Solution {
+public:
+    int row;
+    int col;
+
+    bool valid(int i,int j)
+    {
+        return i>=0 && i<row && j>=0 && j<col;
+    }
+
+    int path(int r,int c,vector<vector<int>>& obstacleGrid)
+    {
+        if(r==row-1 && c==col-1)    //reached the dest
+            return -1;
+        
+        if(obstacleGrid[r][c]==1)   // obstacle
+            return 0;
+        
+        if(obstacleGrid[r][c]!=1 && obstacleGrid[r][c]!=0)  // already visited
+            return obstacleGrid[r][c];
+        
+        int right=0;
+        int down=0;
+
+        if(valid(r,c+1))    //move right
+        {
+            right=path(r,c+1,obstacleGrid);
+        }
+
+        if(valid(r+1,c))    //move down
+        {
+            down=path(r+1,c,obstacleGrid);
+        }
+
+        return obstacleGrid[r][c]=right+down;
+
+    }
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        
+        row=obstacleGrid.size();
+        col=obstacleGrid[0].size();
+
+        if(obstacleGrid[0][0]==1 || obstacleGrid[row-1][col-1])
+            return 0;
+        
+        return abs(path(0,0,obstacleGrid));
+    }
+};
