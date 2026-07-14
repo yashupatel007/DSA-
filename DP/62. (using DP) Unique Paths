@@ -1,0 +1,48 @@
+link- https://leetcode.com/problems/unique-paths/description/
+TC- O(M * N)
+SC - O( M* N)
+code - 
+
+class Solution {
+public:
+    int r1;
+    int c1;
+    int path(int row,int col,vector<vector<int>>& grid)
+    {
+        if(row==r1-1 && col==c1-1)
+            return 1;
+        if(grid[row][col]!=-1)
+        {
+            return grid[row][col];
+        }
+
+        int right=0;
+        int down=0;
+        if(valid(row,col+1))
+        {
+            right=path(row,col+1,grid);//move right
+        }
+        if(valid(row+1,col))
+        {
+            down=path(row+1,col,grid);// move down
+        }
+        return grid[row][col]=right+down;
+
+    }
+
+    bool valid(int i,int j)
+    {
+        return i>=0 && i<r1 && j>=0 && j<c1;
+    }
+
+    int uniquePaths(int m, int n) {
+        // approach - dest return 1 
+        //if i already visited the cell just return its value
+        // if not visited visit and check if i can reach to the destination
+        // return cell = my right path + my down path
+        r1=m;
+        c1=n;
+        vector<vector<int>>grid(m,vector<int>(n,-1));
+        return path(0,0,grid);
+    }
+};
