@@ -1,0 +1,40 @@
+link - https://leetcode.com/problems/top-k-frequent-elements/description/?envType=problem-list-v2&envId=bucket-sort
+TC- O(N)
+SC- O(N)
+code-
+
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        int n=nums.size();
+        //store the freq of the elements
+        unordered_map<int,int>mp;
+        for(int i=0;i<n;i++)
+        {
+            mp[nums[i]]++;
+        }
+
+        // make bucket vector and its index is acts as the freq 
+        vector<vector<int>>bucket(n+1);
+        for(auto& x:mp)
+        {
+            bucket[x.second].push_back(x.first);
+        }
+        //traverse from back and find the top k most frequent elements
+        int index=n;
+        vector<int>ans;
+        while(k>0 )
+        {
+            if(bucket[index].size()!=0)
+            {
+                for(int i=0;i<bucket[index].size();i++)
+                {
+                    ans.push_back(bucket[index][i]);
+                }
+                k-=bucket[index].size();
+            }
+            index--;
+        }
+        return ans;
+    }
+};
