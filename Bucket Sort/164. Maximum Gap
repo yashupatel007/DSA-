@@ -1,0 +1,53 @@
+link - https://leetcode.com/problems/maximum-gap/description/?envType=problem-list-v2&envId=bucket-sort
+TC- O(N)
+SC- O(N)
+code -
+
+class Solution {
+public:
+    int maximumGap(vector<int>& nums) {
+        int n=nums.size();
+        if(n<2) return 0;
+
+        // find the boundaries(min & max)
+        int mini=INT_MAX;
+        int maxi=INT_MIN;
+        for(int i=0;i<n;i++)
+        {
+            mini=min(mini,nums[i]);
+            maxi=max(maxi,nums[i]);
+        }
+
+        if(mini==maxi)  //all elements are same -[0,0,0]
+            return 0;
+        // calculate the Average gap
+        int averageDiff=(maxi-mini)/(n-1);  //bucket size
+        averageDiff=max(1,averageDiff); // for averageDiff is 0 but elements are not same- [1,1,1,1,1,5,5,5,5,5]
+        // find the no. of buckets needed
+        int bucketNumber=(  (maxi-mini)/(averageDiff)  ) +1;   //ex- page no. finding & do +1 for 0 indexing based
+
+        // store the element in buckets
+        vector<pair<int,int>>bucket(bucketNumber,{INT_MAX,INT_MIN});   //(min,max)
+
+        for(int i=0;i<n;i++)
+        {
+            int index= (nums[i]-mini)/averageDiff;   // find the index to which bucket it will go 
+            bucket[index].second=max(bucket[index].second,nums[i]);
+            bucket[index].first=min(bucket[index].first,nums[i]);
+        }
+
+        // now start with 1 and substract the min of 0 to max of 1 for the max diff
+        int prev_max=bucket[0].second;
+        int ans=0;
+        for(int i=1;i<bucketNumber;i++)
+        {
+           if(bucket[i].first!=INT_MAX)
+           {
+            ans=max(ans,bucket[i].first-prev_max);
+            prev_max=bucket[i].second;
+           }
+        }
+        return ans;
+
+    }
+};
