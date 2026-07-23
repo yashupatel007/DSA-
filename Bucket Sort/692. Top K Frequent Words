@@ -1,0 +1,40 @@
+link - https://leetcode.com/problems/top-k-frequent-words/description/?envType=problem-list-v2&envId=bucket-sort
+TC- O(nlogk)
+SC- O(N)
+code- 
+
+class Solution {
+public:
+    struct comp
+    {
+        bool operator()(pair<string,int>& a,pair<string,int>& b)
+        {
+            if(a.second!=b.second)
+                return a.second>b.second;
+            
+            return a.first<b.first;
+        }
+    };
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        int n=words.size();
+        // find the freq  of each words
+        unordered_map<string,int>mp;
+        for(int i=0;i<n;i++)
+        {
+            mp[words[i]]++;
+        }
+        // store in bucket
+        vector<pair<string,int>>bucket(mp.begin(),mp.end());    //copy the map in bucket
+        // sort the bucket
+        sort(bucket.begin(),bucket.end(),comp());
+
+        //store in the ans
+        vector<string>ans;
+        for(int i=0;i<k;i++)
+        {
+            ans.push_back(bucket[i].first);    // store the top k freq strings
+        }
+       
+    return ans;
+    }
+};
