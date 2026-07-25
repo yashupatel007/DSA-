@@ -1,0 +1,39 @@
+link-https://leetcode.com/problems/last-stone-weight-ii/description/
+TC- O( N * target )
+SC- O( N * target )
+code - 
+
+class Solution {
+public:
+    int n;
+    vector<vector<int>>dp;
+
+    int knapsack(int index,vector<int>& stones,int target,vector<vector<int>>& dp)
+    {
+        if(target==0 || index>=n)   // base case
+            return 0;
+        ;
+        if(dp[index][target]!=-1)   // already calculated
+            return dp[index][target];
+        
+        int include=INT_MIN;
+       // include when target >= stone ex. 3 and 10 => 2-10=> target -7 exlude it
+        if(!(target<stones[index])) 
+            include=stones[index]+knapsack(index+1,stones,target-stones[index],dp);
+        
+        int exclude=knapsack(index+1,stones,target,dp); //always run 
+
+        return dp[index][target]=max(include,exclude);  // find the max to minimize the weight
+    }
+    int lastStoneWeightII(vector<int>& stones) {
+        n=stones.size();
+
+        int sum=accumulate(stones.begin(),stones.end(),0);
+        int target=sum/2;
+
+        dp.resize(n,vector<int>(target+1,-1));
+        int s2=knapsack(0,stones,target,dp);
+        int s1=sum-s2;
+        return s1-s2;
+    }
+};
