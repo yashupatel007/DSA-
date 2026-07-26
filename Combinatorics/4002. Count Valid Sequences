@@ -1,0 +1,68 @@
+link - https://leetcode.com/problems/count-valid-sequences/description/
+TC- O( N + log2 MOD )
+SC - O(N)
+code- 
+
+class Solution {
+public:
+    long long MOD=1e9+7;
+    long long power(long long base,long long exp)
+    {
+        long long res=1;
+        base%=MOD;  // squaring make large value
+        while(exp>0)
+        {
+            if(exp%2==1)    //odd
+            {
+                res=(res*base) %MOD;
+            }
+            base=(base*base) %MOD;  // these 2 steps for building next values
+            exp/=2; // for both even and odd -> even(exp/2) & odd(exp-1)
+        }
+        return res;
+    }
+
+    // Modular Inverse using Fermat's Little Theorem
+    long long modularInversion(long long n)
+    {
+        return power(n,MOD-2);  // modInv of A= (A^MOD-2) %MOD
+    }
+    int countValidSequences(int n, int k) {
+        //precalculate the all factorial upto n
+        vector<long long>fact(n+1,1);
+        for(int i=1;i<=n;i++)
+        {
+            fact[i]=(fact[i-1] * i) %MOD;
+        }
+
+        // calculate inverse factorial , start from last to stop calling power fn again & again
+        vector<long long>invFact(n+1,1);
+        invFact[n]=modularInversion(fact[n]);
+
+        for(int i=n-1;i>=0;i--)
+        {
+            invFact[i]=(invFact[i+1] * (i+1)) %MOD;
+        }
+
+        // let's use lamda fn reduce the code 
+        auto ncr= [&](long long N,long long R) -> long long{
+            if(R<0 || R>N)  return 0;
+            return fact[N]*invFact[R] %MOD *invFact[N-R]%MOD;   //evaluate left to right
+        };
+
+        //total sequence (stars and bars)
+        long long totalSeq= ncr(n-1,k-1);
+
+        //calculate odd only sequence & substract from total seq to find even seq.
+        long long oddSeq=0;
+        if((n-k)%2==0)
+        {
+            long long M=(n-k)/2;
+            oddSeq= ncr(M+k-1,k-1);
+        }
+
+        //final ans
+        long long ans=(totalSeq-oddSeq+MOD) %MOD;
+        return ans;
+    }
+};
