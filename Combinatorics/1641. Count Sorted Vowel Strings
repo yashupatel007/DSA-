@@ -1,0 +1,21 @@
+link - https://leetcode.com/problems/count-sorted-vowel-strings/description/
+TC- O(1)
+SC- O(1)
+code- 
+
+class Solution {
+public:
+    int countVowelStrings(int n) {
+        // just apply the formula - combination with repetition
+        // (n+r-1)! / (r)! * (n-1)!
+        int value=4+n;
+        int ans=1;
+
+        for(int i=0;i<4;i++)
+        {
+            ans=ans*value;
+            value--;
+        }
+        return ans/24;
+    }
+};
