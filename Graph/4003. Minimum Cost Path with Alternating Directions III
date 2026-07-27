@@ -1,0 +1,86 @@
+link- https://leetcode.com/problems/minimum-cost-path-with-alternating-directions-iii/description/
+TC- O( m*n log(m*n) )
+SC- O( m*n )
+code- 
+
+class Solution {
+public:
+    int r[4]={0,1,0,-1};
+    int c[4]={1,0,-1,0};
+    
+    bool valid(int i,int j,int m,int n)
+    {
+        return i>=0 && i<m && j>=0 && j<n;
+    }
+
+    long long entryCost(int row,int col)
+    {
+        return (row+1) * (col+1);
+    }
+
+    // 0-right , 1-down , 2-down , 3-up
+    bool validDir(int dir,int parity)
+    {
+        if(parity==1 && (dir==0 || dir==1)) return true;
+        if(parity==0 && (dir==2 || dir==3)) return true;
+
+        return false;
+    }
+    long long minCost(int m, int n, vector<vector<int>>& penalty) {
+        using element=tuple<long long, int ,int ,int>;  //for storing {total_cost,row,col,next_parity}
+        // make 3D dist vector [row,col,parity]
+        // parity-> 1=odd & 0=even & -1=unvisited
+        vector<vector<vector<long long>>> dist(m,vector<vector<long long>>(n,vector<long long>(2,-1)));
+
+        //make min heap
+        priority_queue<element,vector<element>,greater<element>>pq;
+        dist[0][0][1]=entryCost(0,0);
+        pq.push({entryCost(0,0),0,0,1});// parity-1 (odd)
+
+        //pop from the p and check all its child
+        while(!pq.empty())
+        {
+            auto [cost,row,col,p]=pq.top();
+            pq.pop();
+
+            if(row==m-1 && col==n-1)    //reached the destination
+                return cost;
+
+            int new_p=1-p;     // toggle the parity
+
+            // choices - wait
+            long long wait=cost+penalty[row][col];
+            // update if unvisited or curr cost is less than earlier one
+            if(dist[row][col][new_p]==-1 || dist[row][col][new_p]>wait)
+            {
+                dist[row][col][new_p]=wait;
+                pq.push({wait,row,col,new_p});
+            }
+
+            // check for other 4 moves 
+            for(int i=0;i<4;i++)
+            {
+                int next_r= row+r[i];
+                int next_c=col+c[i];
+
+                if(valid(next_r,next_c,m,n) )
+                {
+                    long long move_cost=cost+entryCost(next_r,next_c);  //valid move find the entry cost
+
+                    if(validDir(i,new_p))
+                    {
+                        move_cost+=penalty[row][col]; // add parent penality cost
+                    }
+
+                    //update the dist if move_cost is less than dist cost
+                    if(dist[next_r][next_c][new_p]==-1 || move_cost<dist[next_r][next_c][new_p])
+                    {
+                        dist[next_r][next_c][new_p]=move_cost;
+                        pq.push({move_cost,next_r,next_c,new_p});
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+};
