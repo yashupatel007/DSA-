@@ -1,0 +1,135 @@
+link - https://leetcode.com/problems/count-ways-to-make-array-with-product/description/
+TC- O( N + Q ) , where Q- no of queries
+SC- O(N)
+code-
+
+class Solution {
+public:
+    long long MOD=1e9+7;
+    vector<int>spf=vector<int>(10021);
+    vector<long long>fact=vector<long long>(10021,1);
+    vector<long long>invfact=vector<long long>(10021,1);
+
+    void buildfactorial()
+    {
+        for(int i=1;i<=10020;i++)
+        {
+            fact[i]=(fact[i-1]*i) %MOD;
+        }
+    }
+
+    void builInvfact()
+    {
+        invfact[10020]=modInversion(fact[10020]);
+
+        for(int i=10019;i>=0;i--)
+        {
+            invfact[i]=(invfact[i+1]*(i+1)) %MOD;
+        }
+    }
+
+    long long power(long long base , long long exp)
+    {
+        long long res=1;
+        base%=MOD;
+
+        while(exp>0)
+        {
+            if(exp%2==1)    //odd
+            {
+                res=(res*base) %MOD;
+            }
+
+            base= (base*base) %MOD;
+            exp/=2;
+        }
+        return res;
+    }
+
+    long long modInversion(long long n)
+    {
+        return power(n,MOD-2);
+    }
+
+    void buildspf()
+    {
+        // make its own smallest prime factor
+        for(int i=0;i<=10020;i++)
+        {
+            spf[i]=i;
+        }
+
+        // now calculate the spf of numbers when spf[i]=i
+
+        for(int i=2;i*i<10020;i++)
+        {
+            if(spf[i]==i)
+            {
+                for(int j=i*i;j<=10020;j+=i)
+                {
+                    if(spf[j]==j)
+                    {
+                        spf[j]=i;
+                    }
+                }
+            }
+        }
+    }
+
+    vector<long long> queryprocess(long long m,long long k)
+    {
+        vector<long long>primeFactor;
+         while(k>1)
+            {
+                long long p=spf[k];   //grab smallest factor
+                long long count=0;
+
+                while(k%p==0)
+                {
+                    count++;
+                    k/=p;
+                }
+                // apply the nCr logic here
+                // long long R=min(m-1,count);   // take which one is less n-1 or r
+                long long N=m+count-1;
+                long long R=count;
+                primeFactor.push_back(ncr(N,R));
+
+            }
+            return primeFactor;
+    }
+
+    long long ncr(long N,long R)
+    {
+        if(R<0 || R>N)
+            return 0;
+        
+        return fact[N] * invfact[R] %MOD * invfact[N-R] %MOD;
+    }
+    vector<int> waysToFillArray(vector<vector<int>>& queries) {
+        int n=queries.size();
+
+        buildspf(); //precompute the spf of 10^4
+        buildfactorial();   //precompute the factorial upto 10^4
+        builInvfact();  //recompute the factorial upto 10^4
+
+        vector<int>ans;
+
+        for(int i=0;i<n;i++)
+        {
+            long long m=queries[i][0];
+            long long k=queries[i][1];
+
+           vector<long long>res=queryprocess(m,k);
+            long long temp=1;
+           for(int j=0;j<res.size();j++)
+           {
+                temp= ( temp * res[j]) %MOD;
+           }
+           ans.push_back(temp);
+           
+        }
+        
+        return ans;
+    }
+};
