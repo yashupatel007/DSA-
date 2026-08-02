@@ -1,0 +1,57 @@
+link- https://leetcode.com/problems/car-pooling/description/
+TC- O(NlogN)
+SC- O(2*N) => O(N)
+code-
+
+class Solution {
+public:
+    using element=pair<pair<int,int>,int>;
+    bool carPooling(vector<vector<int>>& trips, int capacity) {
+        int n=trips.size();
+        vector<element>arr;
+
+        for(int i=0;i<n;i++)
+        {
+            int passenger=trips[i][0];
+            int start=trips[i][1];
+            int end=trips[i][2];
+
+            arr.push_back({{start,+1},passenger});  // start time -> +1
+            arr.push_back({{end,-1},passenger});    // end time -> -1
+        }
+
+        // sort on the basis of time 
+        sort(arr.begin(),arr.end(),[](const element& a,const element& b)
+        {
+            if(a.first.first == b.first.first)      // if same then first drop pass then take new 
+                return a.first.second < b.first.second; // {5,-1},{5,+1}
+
+            return a.first.first < b.first.first;
+        });
+        
+        int maxPassenger=INT_MIN;
+        int currPassenger=0;
+        for(int i=0;i<arr.size();i++)
+        {
+            // int time=arr[i].first.first;
+            int inout=arr[i].first.second;
+            int passenger=arr[i].second;
+
+            if(inout>0) //+ve
+            {
+                currPassenger+=passenger;
+               
+            }
+            else    //-ve
+            {
+                currPassenger-=passenger;
+            }
+            maxPassenger=max(maxPassenger,currPassenger);   // find max passenger if it is <=capacity then YES else NO
+
+            if(maxPassenger>capacity)
+                return false;
+        }
+
+        return true;
+    }
+};
