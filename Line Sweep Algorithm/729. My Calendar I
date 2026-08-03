@@ -1,0 +1,28 @@
+link - https://leetcode.com/problems/my-calendar-i/description/
+TC- O(N)
+SC- O(N)
+code-
+class MyCalendar {
+public:
+    using element=pair<int,int>;
+    vector<element>booking;
+    MyCalendar() {
+        
+    }
+    
+    bool book(int startTime, int endTime) {
+        for(auto&[start,end]:booking)
+        {
+            if(max(start,startTime)<min(end,endTime))
+                return false;
+        }
+        booking.push_back({startTime,endTime});
+        return true;
+    }
+};
+
+/**
+ * Your MyCalendar object will be instantiated and called as such:
+ * MyCalendar* obj = new MyCalendar();
+ * bool param_1 = obj->book(startTime,endTime);
+ */
