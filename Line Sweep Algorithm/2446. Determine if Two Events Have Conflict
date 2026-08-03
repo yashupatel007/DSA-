@@ -1,0 +1,40 @@
+link - https://leetcode.com/problems/determine-if-two-events-have-conflict/description/
+TC- O(N)
+SC- O(1)
+code-
+
+class Solution {
+public:
+    bool haveConflict(vector<string>& event1, vector<string>& event2) {
+        
+        vector<int>e1;
+        // convert into minutes for better comparison
+        for(auto& c:event1)
+        {
+            int temp=stoi((c.substr(0,2))) * 60 +stoi((c.substr(3,2)));
+            e1.push_back(temp);
+        }
+
+         vector<int>e2;
+        // convert into minutes for better comparison
+        for(auto& c:event2)
+        {
+            int temp=stoi((c.substr(0,2))) * 60 +stoi((c.substr(3,2)));
+            e2.push_back(temp);
+        }
+
+        if(max(e1[0],e2[0]) <= min(e1[1],e2[1]))
+        {
+            return true;
+        }
+        return false;
+    }
+};
+
+//2nd approach
+class Solution {
+public:
+    bool haveConflict(vector<string>& event1, vector<string>& event2) {
+        return max(event1[0],event2[0])<=min(event1[1],event2[1]);
+    }
+};
