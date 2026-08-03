@@ -1,0 +1,38 @@
+link - https://leetcode.com/problems/my-calendar-ii/description/
+TC- O(N)
+SC-O(N)
+code-
+
+class MyCalendarTwo {
+public:
+    using element=pair<int,int>;
+    vector<element>booking;
+    vector<element>overlap;
+    // if 3rd overlap then its not valid
+    MyCalendarTwo() {
+        
+    }
+    
+    bool book(int startTime, int endTime) {
+        for(auto&[start,end]:overlap)
+        {
+            // overlap condition
+            if(max(start,startTime) < min(end,endTime))
+                return false;   // 3rd overlap
+        }
+
+        for(auto&[start,end]:booking)
+        {
+            if(max(start,startTime) < min(end,endTime))
+                overlap.push_back({max(start,startTime),min(end,endTime)});
+        }
+        booking.push_back({startTime,endTime});
+        return true;
+    }
+};
+
+/**
+ * Your MyCalendarTwo object will be instantiated and called as such:
+ * MyCalendarTwo* obj = new MyCalendarTwo();
+ * bool param_1 = obj->book(startTime,endTime);
+ */
