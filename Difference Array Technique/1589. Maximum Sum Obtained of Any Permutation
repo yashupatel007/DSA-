@@ -1,0 +1,43 @@
+link - https://leetcode.com/problems/maximum-sum-obtained-of-any-permutation/description/
+TC- O(nlogn)
+SC- O(n)
+code- 
+
+class Solution {
+public:
+    long long MOD=1e9+7;
+    int maxSumRangeQuery(vector<int>& nums, vector<vector<int>>& requests) {
+        int n=nums.size();
+        vector<int>diffarr(n+1,0);
+
+        for(int i=0;i<requests.size();i++)
+        {
+            int start=requests[i][0];
+            int end=requests[i][1];
+
+            diffarr[start]++;
+            diffarr[end+1]--;
+        }
+
+        int cummCount=0;
+        //update on diffarr
+        for(int i=0;i<n;i++)
+        {
+            int cummSum=cummCount+diffarr[i];
+            diffarr[i]=cummSum;
+
+            cummCount=cummSum;
+        }
+        diffarr.pop_back(); //delete extra last element (0)
+        sort(diffarr.begin(),diffarr.end());
+        sort(nums.begin(),nums.end());
+
+        //multiply greater count for greatest no.
+        long long sum=0;
+        for(int i=0;i<n;i++)
+        {
+            sum=( sum+ 1LL * nums[i] * diffarr[i] ) %MOD;
+        }
+        return sum;
+    }
+};
