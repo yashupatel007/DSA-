@@ -1,0 +1,32 @@
+link- https://leetcode.com/problems/corporate-flight-bookings/description/
+TC- O(n)
+SC- O(n)
+code-
+
+class Solution {
+public:
+    vector<int> corpFlightBookings(vector<vector<int>>& bookings, int n) {
+        int m=bookings.size();
+        vector<int>diffarr(n+2,0);
+
+        for(int i=0;i<m;i++)
+        {
+            int first=bookings[i][0];
+            int last=bookings[i][1];
+            int seat=bookings[i][2];
+
+            diffarr[first]+=seat;
+            diffarr[last+1]-=seat;
+        }
+
+        int cummCount=0;
+        vector<int>ans;
+
+        for(int i=1;i<=n;i++)
+        {
+            cummCount+=diffarr[i];
+            ans.push_back(cummCount);
+        }
+        return ans;
+    }
+};
