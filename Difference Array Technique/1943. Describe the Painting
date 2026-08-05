@@ -1,0 +1,39 @@
+link - https://leetcode.com/problems/describe-the-painting/description/
+TC- O(nlogn)
+SC-O(n)
+code-
+
+class Solution {
+public:
+    vector<vector<long long>> splitPainting(vector<vector<int>>& segments) {
+        vector<vector<long long>>ans;
+        int n=segments.size();
+        map<long long,long long>mp;
+
+        for(int i=0;i<n;i++)
+        {
+            int start=segments[i][0];
+            int end=segments[i][1];
+            long long color=segments[i][2];
+
+            mp[start]+=color;
+            mp[end]-=color;
+
+        }
+
+        long long cummCount=0;
+        int next=-1;
+        for(auto& it:mp)
+        {
+            int curr=it.first;
+
+            if(next!=-1 && cummCount>0)
+            {
+                ans.push_back({next,curr,cummCount});
+            }
+            next=curr;
+            cummCount+=it.second;
+        }
+        return ans;
+    }
+};
