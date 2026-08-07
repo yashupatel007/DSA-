@@ -1,0 +1,39 @@
+link - https://leetcode.com/problems/shifting-letters-ii/description/
+TC- O(N)
+SC- O(N)
+code-
+
+class Solution {
+public:
+    string shiftingLetters(string s, vector<vector<int>>& shifts) {
+        int n=shifts.size();
+        int m=s.size();
+        vector<int>diffarr(m+1,0);
+
+        for(int i=0;i<n;i++)
+        {
+            int start=shifts[i][0];
+            int end=shifts[i][1];
+            int dir=shifts[i][2] ? 1 : -1;
+
+            diffarr[start]+=dir;
+            diffarr[end+1]-=dir;
+        }
+
+        int cummSum=0;
+        for(int i=0;i<m+1;i++)
+        {
+            diffarr[i]=cummSum+diffarr[i];
+            cummSum=diffarr[i];
+        }
+        diffarr.pop_back();
+
+        string ans="";
+        for(int i=0;i<m;i++)
+        {
+            int shift=(diffarr[i]%26+26)%26;
+            ans+=((s[i]-'a')+shift)%26+'a';
+        }
+        return ans;
+    }
+};
