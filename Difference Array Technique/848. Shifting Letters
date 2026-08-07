@@ -1,0 +1,29 @@
+link - https://leetcode.com/problems/shifting-letters/description/
+TC- O(N)
+SC-(N)
+code-
+
+class Solution {
+public:
+    string shiftingLetters(string s, vector<int>& shifts) {
+        int n=shifts.size();
+
+        //find the prefix sum from the last & update it to the shifts
+        int prefixSum=0;
+        for(int i=n-1;i>=0;i--)
+        {
+            shifts[i]=(prefixSum+shifts[i]) %26;
+            prefixSum=shifts[i];
+        }
+        // now increase the string s by shifts[i]
+        //if greater than >122 take modulo %122 and add +97 
+        string ans="";
+        for(int i =0;i<n;i++)
+        {
+            int newShift=shifts[i] ;
+
+            ans+=( s[i] -'a'+newShift ) %26;
+        }
+        return ans;
+    }
+};
