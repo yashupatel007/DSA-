@@ -1,0 +1,38 @@
+link- https://leetcode.com/problems/zero-array-transformation-i/description/
+TC- O(N)
+SC- O(N)
+code-
+
+class Solution {
+public:
+    bool isZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+        int n=nums.size();
+        int m=queries.size();
+
+        vector<int>diffarr(n+1,0);
+        // build the diffarr
+        for(int i=0;i<m;i++)
+        {
+            int start=queries[i][0];
+            int end=queries[i][1];
+
+            diffarr[start]++;
+            diffarr[end+1]--;
+
+        } 
+        // find the cummulative sum
+        int cummSum=0;
+        for(int i=0;i<n;i++)
+        {
+            diffarr[i]=cummSum+diffarr[i];
+            cummSum=diffarr[i];
+
+            // substract & check the zero
+            nums[i]=nums[i]-diffarr[i];
+
+            if(nums[i]>0)
+                return false;
+        }
+        return true;
+    }
+};
