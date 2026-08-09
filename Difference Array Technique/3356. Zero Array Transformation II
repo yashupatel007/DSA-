@@ -1,0 +1,46 @@
+link- https://leetcode.com/problems/zero-array-transformation-ii/description/
+TC-from O((N+M) log M) to  O(N+M)
+SC- O(N)
+code- 
+
+class Solution {
+public:
+    int minZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+        int n=nums.size();
+        int m=queries.size();
+
+        int currSum=0;
+        vector<int>diffarr(n+1,0);
+        int k=0;
+
+        for(int i=0;i<n;i++)
+        {
+           currSum+=diffarr[i]; //add to check if it make 0
+
+            while(k<m && currSum<nums[i])
+            {
+                int start=queries[k][0];
+                int end=queries[k][1];
+                int val=queries[k][2];
+
+                // check the query - (past ,present,future)
+                // if(end<i)   //past- ignore
+                if(start<=i && end>=i) //present - add to currSum & diffarr
+                {
+                    currSum+=val;
+                    diffarr[end+1]-=val;
+                }
+                else if(start>i)    //future- add to diffarr
+                {
+                    diffarr[start]+=val;
+                    diffarr[end+1]-=val;
+                }
+
+                k++;    //past query ignore or after processing just move
+            }
+            if(k==m && currSum<nums[i])    return -1;
+
+        }
+        return k;
+    }
+};
