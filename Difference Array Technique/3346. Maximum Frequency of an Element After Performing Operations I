@@ -1,0 +1,47 @@
+link - https://leetcode.com/problems/maximum-frequency-of-an-element-after-performing-operations-i/description/
+TC- O( N+ maxVal)
+SC- O(maxVal)
+code-
+
+class Solution {
+public:
+    int maxFrequency(vector<int>& nums, int k, int numOperations) {
+        int n=nums.size();
+        int maxVal= *max_element(nums.begin(),nums.end())+k;
+        vector<int>diffarr(maxVal+2,0);
+        unordered_map<int,int>mp;
+
+        // store the nums in mp for the lookup
+        for(auto& x:nums)
+        {
+            mp[x]++;
+        }
+
+        //build the diffarr
+        for(int i=0;i<n;i++)
+        {
+           
+            int start= max(nums[i]-k , 0);  //start (dont want to go -ve, if -ve store 0)
+            int end= min(nums[i]+k , maxVal); //end (dont go >maxVal)
+
+            diffarr[start]++;
+            diffarr[end+1]--;
+        }
+
+        // find the cummSum and find the ans
+        int result=1;
+        for(int target=0;target<=maxVal;target++)
+        {
+            diffarr[target]+= (target>0 ? diffarr[target-1] : 0); // find the cummSum & if target is 0 store 0 dont check -1
+
+            int originalFreq=mp[target];    // check the original freq of element in nums
+            // needConversion tells - how many elem can reach target excepting its originalFreq
+            int needConversion= diffarr[target]-originalFreq;
+            int maxAllowedConversion= min(needConversion,numOperations); // if 10 num want to change & op=1 then only 1/10 is changed 
+
+            // Total Frequency = (Numbers already at target) + (New numbers we converted)
+            result=max(result, originalFreq+maxAllowedConversion);
+        }
+        return result;
+    }
+};
