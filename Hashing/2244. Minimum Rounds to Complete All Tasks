@@ -1,0 +1,38 @@
+link - https://leetcode.com/problems/minimum-rounds-to-complete-all-tasks/description/
+TC- O(N)
+SC- O(N)
+code-
+
+class Solution {
+public:
+    int minimumRounds(vector<int>& tasks) {
+        int n=tasks.size();
+        unordered_map<int,int>mp;
+
+        // count the frequency of the tasks
+        for(int& task:tasks)
+        {
+            mp[task]++;
+        }
+       
+        int ans=0;
+        for(auto& freq:mp)
+        {
+            int count=freq.second;
+            int divThree=count/3;
+            int modThree=count%3;
+            int divTwo=modThree/2;
+
+            
+
+            if(divThree==0 && divTwo==0)
+                return -1;
+            
+            if(modThree==1)
+                ans+=divThree+divTwo+1;
+            else
+                ans+=divThree+divTwo;
+        }
+        return ans;
+    }
+};
