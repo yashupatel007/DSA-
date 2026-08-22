@@ -1,0 +1,22 @@
+link - https://leetcode.com/problems/check-divisibility-by-digit-sum-and-product/description/?envType=daily-question&envId=2026-08-22
+TC- O(log10 N)
+SC- O(1)
+code-
+
+class Solution {
+public:
+    bool checkDivisibility(int n) {
+        long long sum=0;
+        long long product=1;
+        int temp=n;
+
+        while(temp)
+        {
+            sum+=temp%10;
+            product*=temp%10;
+            temp/=10;
+        }
+
+        return n%(sum+product)==0;
+    }
+};
