@@ -1,0 +1,22 @@
+link - https://leetcode.com/problems/check-ascii-palindromic/description/
+TC- O(N)
+SC-O(N)
+code-
+
+class Solution {
+public:
+    bool isPalindromic(string s) {
+        string binaryStr="";
+
+          for (char c : s) {
+            for (int i = 7; i >= 0; --i) {
+                binaryStr += ((c >> i) & 1) ? '1' : '0';
+            }
+        }
+
+        string reversedStr = binaryStr;
+        reverse(reversedStr.begin(), reversedStr.end());
+        
+        return binaryStr == reversedStr;
+    }
+};
