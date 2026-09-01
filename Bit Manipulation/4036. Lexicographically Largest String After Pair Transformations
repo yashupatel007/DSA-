@@ -1,0 +1,39 @@
+link- https://leetcode.com/problems/lexicographically-largest-string-after-pair-transformations/description/
+TC- O(N)
+SC-O(1)
+code-
+
+class Solution {
+public:
+    string makeString(int num)
+    {
+        string ans="";
+        int total_z=1<<25;  // 2^25
+
+        int z_count=num/total_z;    // count how many max 'z' we can make
+        ans.append(z_count,'z');    // add total 'z' in ans string
+
+        int rem=num%total_z;    // find remainder to find the rest char occurrence
+
+        for(int i=24;i>=0;i--)
+        {
+            if((rem>>i) & 1)    // Right shift rem by i then check even || odd 
+            {
+                ans+=(char)('a'+i);
+            }
+        }
+        return ans;
+
+    }
+    vector<string> largestString(vector<int>& nums) {
+        int n=nums.size();
+        vector<string>ans;
+
+        for(int i=0;i<n;i++)
+        {
+            string res=makeString(nums[i]);
+            ans.push_back(res);
+        }
+        return ans;
+    }
+};
