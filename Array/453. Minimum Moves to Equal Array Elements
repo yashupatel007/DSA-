@@ -1,0 +1,22 @@
+link-https://leetcode.com/problems/minimum-moves-to-equal-array-elements/description/
+TC-O(N)
+SC-O(1)
+code-
+class Solution {
+public:
+    int minMoves(vector<int>& nums) {
+        int n=nums.size();
+        int mini=INT_MAX;
+
+        // find the baseline (min) for comparison
+        for(int& x:nums)
+            mini=min(mini,x);
+
+        int moves=0;
+        for(int& num:nums)
+        {
+            moves+=abs(mini-num);
+        }
+        return moves;
+    }
+};
