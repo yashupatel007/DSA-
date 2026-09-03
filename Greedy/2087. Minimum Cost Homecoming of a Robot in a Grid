@@ -1,0 +1,44 @@
+link - https://leetcode.com/problems/minimum-cost-homecoming-of-a-robot-in-a-grid/description/
+TC- O(N+M)
+SC- O(1)
+code-
+
+class Solution {
+public:
+    int minCost(vector<int>& startPos, vector<int>& homePos, vector<int>& rowCosts, vector<int>& colCosts) {
+        // approach: just find the cost from startRow to homeRow & startCol to homeCol
+        // exclude the cost of startRow & startCol as already standing there
+        int row=startPos[0];
+        int col=startPos[1];
+
+        if(startPos[0]==homePos[0] && startPos[1]==homePos[1])
+            return 0;
+
+
+        // find the row cost
+        int rowCost=0;
+        while(row!=homePos[0])
+        {
+           if(row<homePos[0])
+            row++;
+            else
+                row--;
+            
+            rowCost+=rowCosts[row];
+        }
+
+        // find the col cost
+        int colCost=0;
+        while(col!=homePos[1])
+        {
+           if(col<homePos[1])
+            col++;
+            else
+                col--;
+            
+            colCost+=colCosts[col];
+        }
+
+        return rowCost+colCost; // return the total cost
+    }
+};
