@@ -1,0 +1,25 @@
+link - https://leetcode.com/problems/minimum-moves-to-equal-array-elements-iii/description/
+TC- O(N)
+SC- O(1)
+code-
+
+class Solution {
+public:
+    int minMoves(vector<int>& nums) {
+        // find the max element and then compare with other elements for dist
+        int n=nums.size();
+        
+        // find the max
+        int maxi=INT_MIN;
+        for(int& num:nums)
+            maxi=max(maxi,num);
+
+        // compare with other elements
+        int moves=0;
+        for(int i=0;i<n;i++)
+        {
+            moves+=abs(maxi-nums[i]);
+        }
+        return moves;
+    }
+};
