@@ -1,0 +1,24 @@
+link - https://leetcode.com/problems/minimum-moves-to-equal-array-elements-ii/description/
+TC-O(N)
+SC-O(1)
+code-
+
+class Solution {
+public:
+    int minMoves2(vector<int>& nums) {
+        int n=nums.size();
+
+        if(n==1)
+            return 0;
+
+        sort(nums.begin(),nums.end());  // sort to find the median of nums
+        int median=nums[n/2];
+
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            ans+=abs(median-nums[i]);
+        }
+        return ans;
+    }
+};
