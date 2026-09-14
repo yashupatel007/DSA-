@@ -1,0 +1,17 @@
+link- https://leetcode.com/problems/rectangle-overlap/description/?envType=daily-question&envId=2026-09-14
+TC-O(1)
+SC-O(1)
+code-
+class Solution {
+public:
+    bool isRectangleOverlap(vector<int>& rec1, vector<int>& rec2) {
+        // false - if height & width is 0 -- means rec is just the line
+        if(rec1[0]==rec1[2] || rec1[1]==rec1[3]  ||  rec2[0]==rec2[2] || rec2[1]==rec2[3])
+            return false;
+            
+        // false case - rec1 is - above , below, left , right as comp. to rec2
+        if(rec1[1]>=rec2[3] || rec1[3]<=rec2[1] || rec1[2]<=rec2[0] || rec1[0]>=rec2[2])
+            return false;
+        return true;
+    }
+};
