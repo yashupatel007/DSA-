@@ -1,0 +1,50 @@
+link - https://leetcode.com/problems/friends-of-appropriate-ages/description/
+TC-O(N)
+SC-O(1)
+code-
+
+class Solution {
+public:
+    bool checkRequest(int X,int Y)
+    {
+        if(Y<= 0.5*X+7) return false;
+        if(Y>X) return false;
+        if(Y>100 && X<100)  return false;
+
+        return true;
+    }
+
+    int numFriendRequests(vector<int>& ages) {
+        int n=ages.size();
+
+        // make the buckets of same ages
+        vector<int>count(121,0);
+        for(int& age:ages)
+            count[age]++;
+
+        int totalRequest=0;
+
+        // traverse 120 ages and check one by one
+        for(int ageX=1;ageX<=120;ageX++)
+        {
+            for(int ageY=1;ageY<=120;ageY++)
+            {
+                // no one in this age bucket skip
+                if(count[ageX]==0 || count[ageY]==0)
+                    continue;
+
+                if(checkRequest(ageX,ageY)) // true
+                {
+                    // same age(dont request youself)
+                    if(ageX==ageY)
+                        totalRequest+=count[ageX] * ( count[ageY]-1 );
+                    
+                    // different age
+                    else
+                        totalRequest+= count[ageX] * count[ageY];
+                }
+            }
+        }
+        return totalRequest;
+    }
+};
