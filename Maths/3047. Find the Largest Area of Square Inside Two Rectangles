@@ -1,0 +1,34 @@
+link - https://leetcode.com/problems/find-the-largest-area-of-square-inside-two-rectangles/description/
+TC-O(N^2)
+SC-O(1)
+code-
+
+class Solution {
+public:
+    long long largestSquareArea(vector<vector<int>>& bottomLeft, vector<vector<int>>& topRight) {
+    // approach- find the coordinates of overlapping rectangle ,
+    //  then extract the square by min(height width);
+
+    int n=bottomLeft.size();
+    int maxArea=0;
+    long long maxSide=0;
+
+    // use loop to check only two rectangle and 2nd loop to avoid comparing itself
+    for(int i=0;i<n;i++){
+        for(int j=i+1;j<n;j++)
+        {
+            int x1= max(bottomLeft[i][0],bottomLeft[j][0]);
+            int x2=min(topRight[i][0],topRight[j][0]);
+            int y1=max(bottomLeft[i][1],bottomLeft[j][1]);
+            int y2=min(topRight[i][1],topRight[j][1]);
+
+            int width=max(0,x2-x1);
+            int height=max(0,y2-y1);
+
+            long long side=min(width,height);
+            maxSide=max(maxSide,side);
+        }
+    }
+    return maxSide*maxSide;
+    }
+};
