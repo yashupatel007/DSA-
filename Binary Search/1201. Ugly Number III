@@ -1,0 +1,57 @@
+link - https://leetcode.com/problems/ugly-number-iii/description/
+TC- O( log(high) )
+SC- O(1)
+code-
+
+class Solution {
+public:
+
+    long long gcd(long long a,long long b)
+    {
+        if(b==0)    return a;
+        return gcd(b,a%b);
+    }
+
+    long long lcm(long long a,long long b)
+    {
+        return (a / gcd(a,b)) * b;  // 1st divide then multiply to prevent the overflow
+    }
+    int nthUglyNumber(int n, int a, int b, int c) {
+        long long A=a,B=b,C=c;
+        
+        // LCM(a,b) = a*b / GCD(a,b);
+
+        // custom LCM fn
+
+        long long ab=lcm(A,B);
+        long long bc=lcm(B,C);
+        long long ca=lcm(A,C);
+        long long abc=lcm(ab,C);
+
+        // long long ab=lcm(A,B);
+        // long long bc=lcm(B,C);
+        // long long ca=lcm(A,C);
+        // long long abc=lcm(ab,C);
+
+        long long low=1;
+        long long high=2000000000; // 2*10^9
+        long long ans=0;
+
+        while(low<=high)
+        {
+            long long mid=low+(high-low)/2;
+            // use formula 
+            long long count= (mid/A) + (mid/B) + (mid/C) - (mid/ab) - (mid/bc) - (mid/ca) + (mid/abc);
+
+            if(count>=n)
+            {
+                ans=mid;
+                high=mid-1;
+            }
+            else
+                low=mid+1;
+            
+        }
+        return ans;
+    }
+};
