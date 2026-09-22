@@ -1,0 +1,41 @@
+link-https://leetcode.com/problems/seat-reservation-manager/description/
+TC- O(N log N)
+SC - O(K) , K-> no. of unreserved seats
+code-
+class SeatManager {
+public:
+    // minHeap for unsereved seats
+    priority_queue<int,vector<int>,greater<int>>minHeap;
+    // marker for reserving the seat(if minHeap is empty)
+    int marker;
+
+    SeatManager(int n) {
+        marker=1;
+    }
+    
+    int reserve() {
+        // minHeap !empty
+        if(!minHeap.empty())
+        {
+            int minSeat=minHeap.top();
+            minHeap.pop();
+            return minSeat;
+        }
+        // minHeap empty-> just return marker and incr. it
+        int minSeat=marker;
+        marker++;
+        return minSeat;
+
+    }
+    
+    void unreserve(int seatNumber) {
+        minHeap.push(seatNumber);
+    }
+};
+
+/**
+ * Your SeatManager object will be instantiated and called as such:
+ * SeatManager* obj = new SeatManager(n);
+ * int param_1 = obj->reserve();
+ * obj->unreserve(seatNumber);
+ */
