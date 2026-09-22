@@ -1,0 +1,50 @@
+link - https://leetcode.com/problems/super-ugly-number/description/
+TC-O( NlogK )
+SC- O(N + K)
+code-
+
+class Solution {
+public:
+    int nthSuperUglyNumber(int n, vector<int>& primes) {
+        // APPROACH: as using heap and 2 loops we got the TLE 
+        // so we use MinHeap -> {val,{prime,ptr}}
+        // take the min and increase its ptr and push its next multiple 
+        // to avoid the multiplication and looping  again& again
+
+        using info=pair<long long,pair<int,int>>;
+        priority_queue<info,vector<info>,greater<info>>minHeap;
+        vector<long long>ugly(n);
+
+        ugly[0]=1;  // BASE CASE
+
+        // intialise the heap with intial value multiple of 1 -> prime array itself
+        for(int&  p:primes)
+        {
+            minHeap.push({p,{p,0}});
+        }
+
+        // pop and incrase the ptr & push its next multiple
+        // if duplicate found just push its nextMultiple, incr. its ptr , not incr. the i
+        int i=1;
+        while(i<n)
+        {
+            auto[val,data]=minHeap.top();
+            minHeap.pop();
+
+            int prime=data.first;
+            int ptr=data.second;
+
+            // duplicate cond.
+            if(val!=ugly[i-1])  // !duplicate
+            {
+                ugly[i]=val;
+                i++;
+            }
+
+            // push its next multiple & incr. ptr
+            long long nextMultiple=(long long) prime * ugly[ptr+1];
+            minHeap.push({nextMultiple,{prime,ptr+1}});
+        }
+        return ugly[n-1];
+    }
+};
