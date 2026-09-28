@@ -1,0 +1,37 @@
+link-https://leetcode.com/problems/maximum-equal-adjacent-pairs-after-at-most-one-replacement/description/
+TC - O(N)
+SC- O(N)
+code-
+class Solution {
+public:
+    int maxEqualAdjacentPairs(vector<int>& nums) {
+        int n=nums.size();
+        unordered_map<long long,int>mp;
+
+        // use 64 bit long long to store (2 no.) instead of pairs 
+        // store the freq of number
+        // store the baseline                                                                      
+        int baseline=0;
+        int pairFreq=0;
+        for(int i=1;i<n;i++)
+        {
+            if(nums[i]==nums[i-1])
+                baseline++;
+            else
+            {
+                // always place the smaller one 1st to neglect the order 
+                // {2,3} will same as {3,2}
+                int u=min(nums[i],nums[i-1]);
+                int v=max(nums[i],nums[i-1]);
+
+                long long combinedNum=((long long) u <<32) | (uint32_t) v;
+                mp[combinedNum]++;
+
+                // update the max freq.
+                pairFreq=max(pairFreq,mp[combinedNum]);
+            } 
+        }        
+        
+        return baseline+pairFreq;
+    }
+};
