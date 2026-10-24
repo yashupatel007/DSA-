@@ -1,0 +1,91 @@
+link- https://leetcode.com/problems/swapping-nodes-in-a-linked-list/description/
+TC- O(N)
+SC- O(1)
+
+1st approach -
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapNodes(ListNode* head, int k) {
+        ListNode* curr=head;
+        // find the total nodes
+        int n=0;
+        while(curr)
+        {
+            curr=curr->next;
+            n++;
+        }
+
+        ListNode* start=head;
+        int startCount=k-1;
+        while(startCount)
+        {
+            start=start->next;
+            startCount--;
+        }
+
+        // place the pointer from last k end
+        ListNode* end=head;
+        int endCount=n-k;
+        while(endCount)
+        {
+            end=end->next;
+            endCount--;
+        }
+
+        // swap values
+        swap(start->val,end->val);
+        return head;
+    }
+};
+
+
+2nd approach (efficient)-
+
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapNodes(ListNode* head, int k) {
+        ListNode* startNode=head;
+        ListNode* endNode=head;
+        ListNode* curr=head;
+
+        // place  the 1st pointer
+        int counter=k-1;
+        while(counter)
+        {
+            startNode=startNode->next;
+            curr=curr->next;
+            counter--;
+        }
+        //place the 2nd Pointer
+
+        while(curr->next!=NULL)
+        {
+            curr=curr->next;
+            endNode=endNode->next;
+        }
+        swap(startNode->val,endNode->val);
+        return head;
+    }
+};
