@@ -1,0 +1,53 @@
+link - https://leetcode.com/problems/reverse-nodes-in-even-length-groups/description/
+TC- O(N)
+SC- O(sqrt(N))
+
+code- 
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseEvenLengthGroups(ListNode* head) {
+        ListNode* curr= head;
+        int groupSize=1;
+
+        while(curr!=NULL)
+        {
+            int count=0;
+            vector<ListNode*>group;
+
+            // store the node address in vector
+            while(count<groupSize && curr!=NULL)
+            {
+                group.push_back(curr);
+                count++;
+                curr=curr->next;
+            }
+
+            // swap only even groups
+            if(count%2==0)
+            {
+                int left=0;
+                int right=group.size()-1;
+
+                while(left<right)
+                {
+                    swap(group[left]->val,group[right]->val);
+                    left++;
+                    right--;
+                }
+            }
+
+            groupSize++;
+        }
+        return head;
+    }
+};
