@@ -1,0 +1,26 @@
+link-https://leetcode.com/problems/check-if-all-as-appears-before-all-bs/description/?envType=daily-question&envId=2026-11-22
+TC- O(n)
+SC- O(1)
+code-
+
+class Solution {
+public:
+    bool checkString(string s) {
+       int endIndexA=INT_MIN;
+       bool flagB=true;
+        int startIndexB=INT_MAX;
+
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]=='a' && i>=endIndexA)
+                endIndexA=i;
+            else if(s[i]=='b' && flagB)
+            {
+                startIndexB=i;
+                flagB=false;
+            }     
+        }
+
+        return endIndexA<=startIndexB ? true : false; 
+    }
+};
