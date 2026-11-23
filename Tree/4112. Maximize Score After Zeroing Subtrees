@@ -1,0 +1,44 @@
+link - https://leetcode.com/problems/maximize-score-after-zeroing-subtrees/description/
+TC - O(N)
+SC- O(N)
+
+code-
+
+class Solution {
+public:
+    int n;
+
+    long long dfs(int u,vector<vector<int>>& adjList, vector<int>& op, vector<int>& score)
+    {
+        if(adjList[u].empty())  // leaf node
+            return score[u];
+        
+        long long sum=0;
+        long long minChild=LLONG_MAX;
+
+        // traverse the child
+        for(int& child : adjList[u])
+        {
+            long long val=dfs(child,adjList,op,score);
+            sum+=val;
+            minChild=min(minChild,val);
+        }
+
+        // apply operation
+        if(op[u]==1)
+            return score[u]+(sum-minChild);
+
+         // op=0 and minchild is -ve
+            return score[u]+sum-min(0LL,minChild);
+    }
+    int maxScore(vector<int>& parent, vector<int>& op, vector<int>& score) {
+        n=parent.size();
+        vector<vector<int>>adjList(n);
+        for(int i=1;i<n;i++)    // skip 0 as parent[0]=-1;
+        {
+            adjList[parent[i]].push_back(i);
+        }
+
+        return (int)dfs(0,adjList,op,score);
+    }
+};
